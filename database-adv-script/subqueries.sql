@@ -41,10 +41,9 @@ SELECT *
 FROM users u
 WHERE EXISTS (
     SELECT 1
-    FROM bookings b2
-    WHERE b2.user_id = u.user_id
-    GROUP BY b2.user_id
-    HAVING COUNT(*) > 3
+    FROM bookings b
+    WHERE b.user_id = u.user_id
+    AND (SELECT COUNT(*) FROM bookings b_inner WHERE b_inner.user_id = u.user_id) > 3
 );
 -- ==> This will return all details of users who have made more than 3 bookings.
 
