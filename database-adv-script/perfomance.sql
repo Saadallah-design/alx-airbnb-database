@@ -1,13 +1,26 @@
 -- Write an initial query that retrieves all bookings along with the user details, property details, and payment details and save it on perfomance.sql
 
-SELECT bookings.booking_id, bookings.booking_date, bookings.status,
-       users.user_id, users.name AS user_name, users.email AS user_email,
-       properties.property_id, properties.location AS property_location, properties.price AS property_price,
-       payments.payment_id, payments.amount AS payment_amount, payments.payment_date 
+SELECT bookings.booking_id,
+       bookings.booking_date,
+       bookings.status,
+       users.user_id,
+       users.name AS user_name,
+       users.email AS user_email,
+       properties.property_id,
+       properties.location AS property_location,
+       properties.price AS property_price,
+       payments.payment_id,
+       payments.amount AS payment_amount,
+       payments.payment_date
 FROM bookings
 JOIN users ON bookings.user_id = users.user_id
 JOIN properties ON bookings.property_id = properties.property_id
 JOIN payments ON bookings.booking_id = payments.booking_id;
+WHERE bookings.status = 'confirmed';
+    AND payments.amount > 100;
+
+-- UPDATED: Now added WHERE and AND: 
+-- ==> So, this query now returns only confirmed bookings with payments greater than 100.
 
 -- This query joins the bookings table with users, properties, and payments tables to get comprehensive booking details.
 -- Now, let's optimize this query for better performance.
