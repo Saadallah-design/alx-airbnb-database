@@ -24,6 +24,30 @@ WHERE property_id IN (
 );
 -- ==> This will return all details of properties that have an average rating above 4.0.
 
+-- STEP #3: Checking for correlated subqueries to find users who have made more thatn 3 bookings.
+SELECT *
+FROM users AS u
+WHERE (
+    SELECT COUNT(*)
+    FROM bookings AS b
+    WHERE b.user_id = u.user_id
+) > 3;
+-- This version is called correlated subquery because the inner query references a column from the outer query (u.user_id).
+-- The inner query runs once for each row of the outer query.
+-- The inner query counts bookings for each user, and the outer query filters users with more than
+-- ==> This gives us users with more than 3 bookings.
+-- Now, let's use a correlated subquery to get details of these users.
+SELECT *
+FROM users u
+WHERE EXISTS (
+    SELECT 1
+    FROM bookings b2
+    WHERE b2.user_id = u.user_id
+    GROUP BY b2.user_id
+    HAVING COUNT(*) > 3
+);
+-- ==> This will return all details of users who have made more than 3 bookings.
+
 -- LEARNINGS
 -- Why use a subquery here?
 -- Subqueries let you break a problem into steps: first calculate averages, then filter properties.
